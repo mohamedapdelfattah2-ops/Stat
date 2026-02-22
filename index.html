@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>سؤال عشوائي</title>
+</head>
+<body>
+    <h2 id="question"></h2>
+
+    <script>
+        const questions = [
+            "ما هو حاصل 2 + 2 ؟",
+            "احسب 5 × 3",
+            "ما هو مربع 4 ؟",
+            "احسب 10 - 6"
+        ];
+
+        const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+        document.getElementById("question").innerText = randomQuestion;
+    </script>
+</body>
+</html>

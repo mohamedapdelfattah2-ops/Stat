@@ -5,6 +5,8 @@
     <title>مسابقة تحليل البيانات</title>
     <style>
         body { font-family: Arial; text-align: center; direction: rtl; }
+        table { margin: auto; border-collapse: collapse; width: 60%; }
+        th, td { border: 1px solid #000; padding: 8px; }
     </style>
 </head>
 <body>
@@ -18,10 +20,16 @@
         <button onclick="submitAnswer()">تم الاجابة</button>
     </div>
 
-    <button onclick="endRound()">إنهاء الجولة (حساب النقاط)</button>
-
-    <h2>الترتيب</h2>
-    <div id="leaderboard"></div>
+    <h2>جدول النقاط</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>التيم</th>
+                <th>النقاط</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard"></tbody>
+    </table>
 
     <script>
         let answers = [];
@@ -62,10 +70,8 @@ Requirements:
         }
 
         function submitAnswer() {
-            alert("تم تسجيل الإجابة!");
-        }
+            if (answers.length === 0) return;
 
-        function endRound() {
             answers.sort((a, b) => a.time - b.time);
 
             answers.forEach((ans, index) => {
@@ -77,13 +83,17 @@ Requirements:
                 scores[ans.team] = (scores[ans.team] || 0) + points;
             });
 
-            let result = Object.entries(scores)
-                .sort((a, b) => b[1] - a[1])
-                .map(([team, score]) => `${team}: ${score} نقاط`)
-                .join("<br>");
-
-            document.getElementById("leaderboard").innerHTML = result;
+            updateTable();
             answers = [];
+        }
+
+        function updateTable() {
+            let rows = Object.entries(scores)
+                .sort((a, b) => b[1] - a[1])
+                .map(([team, score]) => `<tr><td>${team}</td><td>${score}</td></tr>`)
+                .join("");
+
+            document.getElementById("leaderboard").innerHTML = rows;
         }
     </script>
 

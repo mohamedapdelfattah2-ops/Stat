@@ -1,106 +1,20 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <title>مسابقة تحليل البيانات</title>
-    <style>
-        body { font-family: Arial; text-align: center; direction: rtl; }
-        table { margin: auto; border-collapse: collapse; width: 60%; }
-        th, td { border: 1px solid #000; padding: 8px; }
-    </style>
-</head>
-<body>
+<style>
+    body {
+        font-family: Arial;
+        text-align: center;
+        direction: rtl;
 
-    <h2>ادخل اسم التيم</h2>
-    <input type="text" id="teamName" placeholder="اسم التيم">
-    <button onclick="startGame()">دخول</button>
+        /* خلفية رمضان */
+        background-image: url('https://images.unsplash.com/photo-1584967789296-8a7c7c9c1d9b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 
-    <div id="game" style="display:none;">
-        <h2 id="question"></h2>
-        <button onclick="submitAnswer()">تم الاجابة</button>
-    </div>
-
-    <h2>جدول النقاط</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>التيم</th>
-                <th>النقاط</th>
-            </tr>
-        </thead>
-        <tbody id="leaderboard"></tbody>
-    </table>
-
-    <script>
-        let answers = [];
-        let scores = {};
-        let teamQuestions = {};
-
-        const questions = [
-            `A company recorded the daily sales of a specific product over 5 days: 20, 24, 28, 22, 26.
-Requirements:
-- Calculate the Mean.
-- Calculate the Population Variance.
-- Calculate the Population Standard Deviation.`,
-
-            `In an employee productivity test, the population mean (μ) is 75 with a standard deviation (σ) of 10.
-One employee scored 90.
-Requirements:
-- Calculate the Z-score for this employee's score.`,
-
-            `A bank knows that the standard deviation of customer transaction times is σ = 4 minutes.
-A random sample of n = 64 transactions is taken.
-Requirements:
-- Calculate the Standard Error of the Mean (σ_X̅).`
-        ];
-
-        function startGame() {
-            const team = document.getElementById("teamName").value;
-            if (!team) return alert("اكتب اسم التيم");
-
-            document.getElementById("game").style.display = "block";
-
-            if (!teamQuestions[team]) {
-                teamQuestions[team] = questions[Math.floor(Math.random() * questions.length)];
-            }
-
-            document.getElementById("question").innerText = teamQuestions[team];
-
-            answers.push({ team: team, time: Date.now() });
-        }
-
-        function submitAnswer() {
-            if (answers.length === 0) return;
-
-            answers.sort((a, b) => a.time - b.time);
-
-            answers.forEach((ans, index) => {
-                let points = index === 0 ? 5 :
-                             index === 1 ? 4 :
-                             index === 2 ? 3 :
-                             index === 3 ? 2 : 1;
-
-                scores[ans.team] = (scores[ans.team] || 0) + points;
-            });
-
-            updateTable();
-            answers = [];
-        }
-
-        function updateTable() {
-            let rows = Object.entries(scores)
-                .sort((a, b) => b[1] - a[1])
-                .map(([team, score]) => `<tr><td>${team}</td><td>${score}</td></tr>`)
-                .join("");
-
-            document.getElementById("leaderboard").innerHTML = rows;
-        }
-    </script>
-
-    <footer style="margin-top:40px;">
-        TA/ Mohamed Mahmoud<br>
-        Aswan Center
-    </footer>
-
-</body>
-</html>
+    /* لو عايز خلفية شفافة للجدول */
+    table, #game {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 10px;
+    }
+</style>

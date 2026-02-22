@@ -5,7 +5,6 @@
     <title>مسابقة تحليل البيانات</title>
     <style>
         body { font-family: Arial; text-align: center; direction: rtl; }
-        #leaderboard { margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -27,6 +26,7 @@
     <script>
         let answers = [];
         let scores = {};
+        let teamQuestions = {};
 
         const questions = [
             `A company recorded the daily sales of a specific product over 5 days: 20, 24, 28, 22, 26.
@@ -43,12 +43,7 @@ Requirements:
             `A bank knows that the standard deviation of customer transaction times is σ = 4 minutes.
 A random sample of n = 64 transactions is taken.
 Requirements:
-- Calculate the Standard Error of the Mean (σ_X̅).`,
-
-            `A sample of n = 100 luxury bags has a mean weight of 1.2kg.
-The population standard deviation is 0.2kg.
-Requirements:
-- Construct a 95% Confidence Interval (Z=1.96).`
+- Calculate the Standard Error of the Mean (σ_X̅).`
         ];
 
         function startGame() {
@@ -56,8 +51,12 @@ Requirements:
             if (!team) return alert("اكتب اسم التيم");
 
             document.getElementById("game").style.display = "block";
-            document.getElementById("question").innerText =
-                questions[Math.floor(Math.random() * questions.length)];
+
+            if (!teamQuestions[team]) {
+                teamQuestions[team] = questions[Math.floor(Math.random() * questions.length)];
+            }
+
+            document.getElementById("question").innerText = teamQuestions[team];
 
             answers.push({ team: team, time: Date.now() });
         }

@@ -2,21 +2,96 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>سؤال عشوائي</title>
+    <title>مسابقة تحليل البيانات</title>
+    <style>
+        body { font-family: Arial; text-align: center; direction: rtl; }
+        #leaderboard { margin-top: 20px; }
+    </style>
 </head>
 <body>
-    <h2 id="question"></h2>
+
+    <h2>ادخل اسم التيم</h2>
+    <input type="text" id="teamName" placeholder="اسم التيم">
+    <button onclick="startGame()">دخول</button>
+
+    <div id="game" style="display:none;">
+        <h2 id="question"></h2>
+        <button onclick="submitAnswer()">تم الاجابة</button>
+    </div>
+
+    <button onclick="endRound()">إنهاء الجولة (حساب النقاط)</button>
+
+    <h2>الترتيب</h2>
+    <div id="leaderboard"></div>
 
     <script>
+        let answers = [];
+        let scores = {};
+
         const questions = [
-            "ما هو حاصل 2 + 2 ؟",
-            "احسب 5 × 3",
-            "ما هو مربع 4 ؟",
-            "احسب 10 - 6"
+            `A company recorded the daily sales of a specific product over 5 days: 20, 24, 28, 22, 26.
+Requirements:
+- Calculate the Mean.
+- Calculate the Population Variance.
+- Calculate the Population Standard Deviation.`,
+
+            `In an employee productivity test, the population mean (μ) is 75 with a standard deviation (σ) of 10.
+One employee scored 90.
+Requirements:
+- Calculate the Z-score for this employee's score.`,
+
+            `A bank knows that the standard deviation of customer transaction times is σ = 4 minutes.
+A random sample of n = 64 transactions is taken.
+Requirements:
+- Calculate the Standard Error of the Mean (σ_X̅).`,
+
+            `A sample of n = 100 luxury bags has a mean weight of 1.2kg.
+The population standard deviation is 0.2kg.
+Requirements:
+- Construct a 95% Confidence Interval (Z=1.96).`
         ];
 
-        const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-        document.getElementById("question").innerText = randomQuestion;
+        function startGame() {
+            const team = document.getElementById("teamName").value;
+            if (!team) return alert("اكتب اسم التيم");
+
+            document.getElementById("game").style.display = "block";
+            document.getElementById("question").innerText =
+                questions[Math.floor(Math.random() * questions.length)];
+
+            answers.push({ team: team, time: Date.now() });
+        }
+
+        function submitAnswer() {
+            alert("تم تسجيل الإجابة!");
+        }
+
+        function endRound() {
+            answers.sort((a, b) => a.time - b.time);
+
+            answers.forEach((ans, index) => {
+                let points = index === 0 ? 5 :
+                             index === 1 ? 4 :
+                             index === 2 ? 3 :
+                             index === 3 ? 2 : 1;
+
+                scores[ans.team] = (scores[ans.team] || 0) + points;
+            });
+
+            let result = Object.entries(scores)
+                .sort((a, b) => b[1] - a[1])
+                .map(([team, score]) => `${team}: ${score} نقاط`)
+                .join("<br>");
+
+            document.getElementById("leaderboard").innerHTML = result;
+            answers = [];
+        }
     </script>
+
+    <footer style="margin-top:40px;">
+        TA/ Mohamed Mahmoud<br>
+        Aswan Center
+    </footer>
+
 </body>
 </html>

@@ -1,47 +1,34 @@
-بص يا معلم 👍
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-## ✔ ليه مش بتعرف نتائج كل الناس بعد ما تخلص؟
+<script>
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+    projectId: "YOUR_PROJECT",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_ID",
+    appId: "YOUR_APP_ID"
+  };
 
-لأن الموقع على **GitHub Pages** هو **موقع ثابت (static)**:
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 
-✅ مفيهوش قاعدة بيانات
-✅ كل جهاز شغال لوحده
-✅ البيانات مش بتتنقل بين الموبايلات
-✅ بعد ما تقفل الصفحة → البيانات بتروح
+  function updateScore(team, points) {
+      db.ref('scores/' + team).transaction(current => (current || 0) + points);
+  }
 
-يعني:
+  function listenToScores() {
+      db.ref('scores').on('value', snapshot => {
+          let scores = snapshot.val() || {};
+          let rows = Object.entries(scores)
+              .sort((a, b) => b[1] - a[1])
+              .map(([team, score]) => `<tr><td>${team}</td><td>${score}</td></tr>`)
+              .join("");
+          document.getElementById("leaderboard").innerHTML = rows;
+      });
+  }
 
-👉 لو 10 ناس دخلوا من موبايلاتهم → كل جهاز شايف بياناته فقط
-👉 انت كمدرب مش بتعرف بياناتهم إلا لو سجلتها يدويًا
-
----
-
-## ✔ عايز أعرف نتائج كل الناس؟
-
-لازم:
-
-✅ قاعدة بيانات (Firebase أو غيره)
-✅ أو نظام سيرفر بيجمع البيانات
-
-بدون ده:
-
-👉 النتائج موجودة فقط على جهازك (اللي فاتح الموقع)
-👉 مش هتقدر تشوف نتائج الموبايلات التانية
-
----
-
-## ✔ حل بسيط (لو مش عايز Firebase)
-
-✔ كل تيم يسلم الإجابة لك يدويًا
-✔ انت تسجل النقاط في الجدول
-✔ بعد المسابقة → الجدول هو النتيجة
-
----
-
-لو تحب:
-
-👉 أعمل لك **نظام نتائج قابل للتصدير (Excel/CSV)**
-👉 أو **حل بدون قاعدة بيانات** يناسب المسابقة
-👉 أو أشرح Firebase خطوة خطوة
-
-قوللي وأنا أساعدك 👍
+  listenToScores();
+</script>
